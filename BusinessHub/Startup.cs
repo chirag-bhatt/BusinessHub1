@@ -1,7 +1,13 @@
+using BusinessHub.BLL;
+using BusinessHub.DAL;
+using BusinessHub.DAL.Entities;
+using BusinessHub.DAL.Repository;
+using BusinessHub.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +32,16 @@ namespace BusinessHub
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            //Configure AppSetting dependency
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            //Add Database connection string
+            services.AddDbContext<BusinessHubDBContext>(op => op.UseSqlServer(Configuration["ConnectionString:BusinessHubDB"]));
+
+            //Add dependency injection to api
+            services.AddScoped<IUserRepository<UserInfo>, UserRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +66,8 @@ namespace BusinessHub
             }
 
             app.UseRouting();
+            //app.UseAuthorization();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
@@ -58,6 +76,7 @@ namespace BusinessHub
                     pattern: "{controller}/{action=Index}/{id?}");
             });
 
+            
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
