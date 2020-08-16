@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -10,6 +10,7 @@
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
+	  <TypeScriptExperimentalDecorators>true</TypeScriptExperimentalDecorators>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,24 @@
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\app\Helpers\auth.guard.ts" />
+    <None Remove="ClientApp\src\app\Helpers\JwtInterceptor.ts" />
+    <None Remove="ClientApp\src\app\Models\AuthenticationRequest.ts" />
+    <None Remove="ClientApp\src\app\Models\User.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\Helpers\auth.guard.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\Helpers\JwtInterceptor.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\Models\AuthenticationRequest.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\Models\User.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
